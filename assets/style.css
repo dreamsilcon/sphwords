@@ -129,6 +129,41 @@ a:hover { color: #115e59; }
   background: transparent;
 }
 .para-row { margin: .28rem 0; }
+.compare-table-wrap {
+  margin: .55rem 0 .35rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .92rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.compare-table th,
+.compare-table td {
+  border: 1px solid var(--line);
+  padding: .45rem .6rem;
+  text-align: left;
+  vertical-align: top;
+  color: #292524;
+}
+.compare-table thead th {
+  background: color-mix(in srgb, var(--accent) 12%, #fff);
+  color: var(--head);
+  font-weight: 650;
+}
+.compare-table tbody th {
+  background: #faf7f2;
+  font-weight: 650;
+  white-space: nowrap;
+  width: 4.5rem;
+}
+.compare-table td:nth-child(2),
+.compare-table th:nth-child(2) { width: 40%; }
 .note { margin-top: 1.2rem; color: var(--muted); font-size: .92rem; }
 .site-footer {
   border-top: 1px solid var(--line);
