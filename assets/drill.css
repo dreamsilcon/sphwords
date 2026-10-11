@@ -182,6 +182,82 @@
   padding: .55rem .75rem;
   justify-self: start;
 }
+.drill-lists {
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.drill-lists-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .35rem;
+}
+.drill-lists-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--head);
+}
+.drill-field.inline {
+  min-width: 10rem;
+}
+.drill-lists-blurb,
+.drill-lists-empty {
+  margin: .25rem 0 .65rem;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.drill-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  margin-bottom: .75rem;
+}
+.drill-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .88rem;
+}
+.drill-table th,
+.drill-table td {
+  border-bottom: 1px solid var(--line);
+  padding: .55rem .5rem;
+  text-align: left;
+  vertical-align: top;
+}
+.drill-table th {
+  background: #faf7f2;
+  color: var(--head);
+  font-weight: 650;
+  white-space: nowrap;
+}
+.drill-table tr:last-child td {
+  border-bottom: none;
+}
+.drill-table td:nth-child(2) {
+  color: var(--muted);
+  max-width: 10rem;
+}
+.drill-linkish {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 650;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+#btn-start-view-list {
+  width: 100%;
+}
 .drill-help {
   margin-top: 1.75rem;
   padding-top: 1rem;
