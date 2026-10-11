@@ -1,5 +1,5 @@
 /* Minimal offline cache for the drill PWA. */
-const CACHE = "sphwords-drill-v3";
+const CACHE = "sphwords-drill-v4";
 const ASSETS = [
   "../drill.html",
   "../manifest.webmanifest",
