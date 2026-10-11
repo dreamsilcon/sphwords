@@ -1,0 +1,166 @@
+.drill-body {
+  min-height: 100dvh;
+}
+.drill-app {
+  width: min(100% - 1.5rem, 28rem);
+  margin: 0 auto;
+  padding: 1rem 0 2.5rem;
+}
+.drill-toolbar {
+  display: grid;
+  gap: .65rem;
+  margin-bottom: .85rem;
+}
+.drill-field {
+  display: grid;
+  gap: .3rem;
+  font-size: .9rem;
+  color: var(--muted);
+}
+.drill-field select {
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .65rem .75rem;
+  background: #fff;
+  color: var(--ink);
+}
+.drill-check {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .92rem;
+  color: var(--ink);
+}
+.drill-status {
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .75rem;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.drill-face {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.6rem 1.2rem 1.1rem;
+  min-height: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.drill-word {
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  font-weight: 750;
+  color: var(--head);
+  letter-spacing: .02em;
+  line-height: 1.2;
+  word-break: break-word;
+}
+.drill-ipa {
+  margin: .45rem 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+.drill-sense {
+  margin: 1.1rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 22rem;
+}
+.drill-sense.is-prompt {
+  color: #a8a29e;
+}
+.drill-sense.is-answer {
+  color: var(--ink);
+  font-weight: 600;
+}
+.drill-extra-hint {
+  margin: .7rem 0 0;
+  font-size: .85rem;
+  color: var(--accent);
+}
+.drill-note-link {
+  margin-top: .55rem;
+  font-size: .95rem;
+  font-weight: 600;
+}
+.drill-tap-hint {
+  margin: 1rem 0 0;
+  font-size: .8rem;
+  color: #a8a29e;
+}
+.drill-empty {
+  margin: 2rem 0;
+  text-align: center;
+  color: var(--muted);
+}
+.drill-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .65rem;
+  margin-top: .9rem;
+  position: sticky;
+  bottom: .75rem;
+}
+.drill-actions #btn-reveal {
+  grid-column: 1 / -1;
+}
+.drill-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: .9rem 1rem;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  background: #fff;
+  color: var(--ink);
+}
+.drill-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.drill-btn.good {
+  background: #ecfdf5;
+  border-color: #6ee7b7;
+  color: #065f46;
+}
+.drill-btn.bad {
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #9a3412;
+}
+.drill-btn.ghost {
+  background: transparent;
+  color: var(--muted);
+  padding: .55rem .75rem;
+  justify-self: start;
+}
+.drill-help {
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .92rem;
+}
+.drill-help h2 {
+  margin: 0 0 .5rem;
+  font-size: 1rem;
+  color: var(--head);
+}
+.drill-help p {
+  margin: .35rem 0;
+}
+@media (min-width: 720px) {
+  .drill-app { padding-top: 1.25rem; }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "SPHWords 自测",
+  "short_name": "SPH自测",
+  "description": "用课堂笔记词头自测背单词：先想意思，再揭晓核心释义。",
+  "start_url": "./drill.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f1e8",
+  "theme_color": "#0f766e",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
