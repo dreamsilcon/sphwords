@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>自测背单词 · SPHWords</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/drill.css" />
+</head>
+<body class="drill-body">
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">SPH<span>Words</span></a>
+      <div class="nav-meta"><a href="index.html">目录</a> · <a href="compare.html">辨析</a> · 自测</div>
+    </div>
+  </header>
+
+  <main class="drill-app">
+    <section class="drill-toolbar">
+      <label class="drill-field">
+        <span>范围</span>
+        <select id="drill-chapter">
+          <option value="all">全部章节</option>
+        </select>
+      </label>
+      <label class="drill-check">
+        <input type="checkbox" id="drill-extra" />
+        <span>只要有扩展/对比的词</span>
+      </label>
+      <button type="button" class="drill-btn ghost" id="btn-reshuffle">重洗牌</button>
+    </section>
+
+    <div class="drill-status">
+      <span id="drill-progress">0 / 0</span>
+      <span id="drill-meta"></span>
+    </div>
+
+    <section class="drill-face" id="drill-face" hidden>
+      <p class="drill-word" id="drill-word"></p>
+      <p class="drill-ipa" id="drill-ipa" hidden></p>
+      <p class="drill-sense is-prompt" id="drill-sense">想一想这个词的意思</p>
+      <p class="drill-extra-hint" id="drill-extra-hint" hidden>本条笔记里还有扩展 / 对比 / 词源</p>
+      <a class="drill-note-link" id="drill-note-link" hidden href="#">查看完整笔记 →</a>
+      <p class="drill-tap-hint">点卡片也可揭晓</p>
+    </section>
+
+    <p class="drill-empty" id="drill-empty" hidden>这个范围内没有词，换个章节试试。</p>
+
+    <section class="drill-actions" id="drill-actions" hidden>
+      <button type="button" class="drill-btn primary" id="btn-reveal">揭晓释义</button>
+      <button type="button" class="drill-btn good" id="btn-know" hidden>认识</button>
+      <button type="button" class="drill-btn bad" id="btn-unknown" hidden>不熟</button>
+    </section>
+
+    <section class="drill-help">
+      <h2>怎么用</h2>
+      <p>正面只出英文词，你先自己想意思，再揭晓。</p>
+      <p>揭晓只显示<strong>词头核心释义</strong>；词条里的易混、对比表、词源不塞进卡片，需要时点「查看完整笔记」。</p>
+      <p>加到手机主屏幕：浏览器菜单里选「添加到主屏幕 / 添加到桌面」即可当 App 用。</p>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap">SPHWords 自测 · 数据来自课堂笔记词头</div></footer>
+  <script src="assets/drill.js" defer></script>
+</body>
+</html>
