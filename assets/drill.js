@@ -13,8 +13,60 @@
   let revealed = false;
   let known = 0;
   let unknown = 0;
+  /** @type {SpeechSynthesisVoice[]} */
+  let voices = [];
 
   const $ = (sel) => document.querySelector(sel);
+
+  function speakable(word) {
+    return String(word || "")
+      .replace(/[/·]+/g, " ")
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function pickVoice() {
+    if (!voices.length && window.speechSynthesis) {
+      voices = window.speechSynthesis.getVoices() || [];
+    }
+    const list = voices;
+    return (
+      list.find((v) => /en-GB/i.test(v.lang) && /female|susan|serena|martha|google/i.test(v.name)) ||
+      list.find((v) => /en-GB/i.test(v.lang)) ||
+      list.find((v) => /en-US/i.test(v.lang)) ||
+      list.find((v) => /^en\b/i.test(v.lang)) ||
+      null
+    );
+  }
+
+  function speakWord(word) {
+    if (!window.speechSynthesis) return;
+    const text = speakable(word);
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const voice = pickVoice();
+    if (voice) {
+      u.voice = voice;
+      u.lang = voice.lang;
+    } else {
+      u.lang = "en-GB";
+    }
+    u.rate = 0.92;
+    u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+
+  function revealCard(withSpeech) {
+    if (revealed) return;
+    revealed = true;
+    render();
+    if (withSpeech !== false) {
+      const card = current();
+      if (card) speakWord(card.word);
+    }
+  }
 
   function loadState() {
     try {
@@ -144,11 +196,14 @@
     $("#drill-extra").addEventListener("change", () => startDeck(true));
     $("#btn-reshuffle").addEventListener("click", () => startDeck(true));
 
-    $("#btn-reveal").addEventListener("click", () => {
-      revealed = true;
-      render();
-    });
+    $("#btn-reveal").addEventListener("click", () => revealCard(true));
     faceTap();
+
+    $("#btn-speak").addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      const card = current();
+      if (card) speakWord(card.word);
+    });
 
     $("#btn-know").addEventListener("click", () => {
       known += 1;
@@ -165,6 +220,13 @@
       nextCard();
     });
 
+    if (window.speechSynthesis) {
+      voices = window.speechSynthesis.getVoices() || [];
+      window.speechSynthesis.addEventListener("voiceschanged", () => {
+        voices = window.speechSynthesis.getVoices() || [];
+      });
+    }
+
     startDeck(true);
 
     if ("serviceWorker" in navigator) {
@@ -176,10 +238,7 @@
     const face = $("#drill-face");
     face.addEventListener("click", (ev) => {
       if (ev.target.closest("a,button")) return;
-      if (!revealed) {
-        revealed = true;
-        render();
-      }
+      if (!revealed) revealCard(true);
     });
   }
 
