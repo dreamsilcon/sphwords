@@ -66,6 +66,17 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+.drill-kind {
+  margin: 0 0 .45rem;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, #fff);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: 999px;
+  padding: .12rem .55rem;
+}
 .drill-word-row {
   display: flex;
   align-items: center;

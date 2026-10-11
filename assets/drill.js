@@ -163,9 +163,11 @@
     }
     const ch = $("#drill-chapter").value;
     const onlyExtra = $("#drill-extra").checked;
+    const includeRelated = $("#drill-related").checked;
     let list = allCards;
     if (ch !== "all") list = list.filter((c) => String(c.chapter) === ch);
-    if (onlyExtra) list = list.filter((c) => c.extra);
+    if (!includeRelated) list = list.filter((c) => c.kind !== "related");
+    if (onlyExtra) list = list.filter((c) => c.extra || c.kind === "related");
     return shuffle(list);
   }
 
