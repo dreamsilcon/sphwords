@@ -40,12 +40,15 @@
     </div>
 
     <section class="drill-face" id="drill-face" hidden>
-      <p class="drill-word" id="drill-word"></p>
+      <div class="drill-word-row">
+        <p class="drill-word" id="drill-word"></p>
+        <button type="button" class="drill-speak" id="btn-speak" aria-label="朗读单词" title="朗读">读</button>
+      </div>
       <p class="drill-ipa" id="drill-ipa" hidden></p>
       <p class="drill-sense is-prompt" id="drill-sense">想一想这个词的意思</p>
       <p class="drill-extra-hint" id="drill-extra-hint" hidden>本条笔记里还有扩展 / 对比 / 词源</p>
       <a class="drill-note-link" id="drill-note-link" hidden href="#">查看完整笔记 →</a>
-      <p class="drill-tap-hint">点卡片也可揭晓</p>
+      <p class="drill-tap-hint">点卡片揭晓；揭晓时会朗读单词</p>
     </section>
 
     <p class="drill-empty" id="drill-empty" hidden>这个范围内没有词，换个章节试试。</p>
@@ -59,6 +62,7 @@
     <section class="drill-help">
       <h2>怎么用</h2>
       <p>正面只出英文词，你先自己想意思，再揭晓。</p>
+      <p>揭晓时会用手机系统语音朗读该词；也可随时点 🔊 再听一遍。</p>
       <p>揭晓只显示<strong>词头核心释义</strong>；词条里的易混、对比表、词源不塞进卡片，需要时点「查看完整笔记」。</p>
       <p>加到手机主屏幕：浏览器菜单里选「添加到主屏幕 / 添加到桌面」即可当 App 用。</p>
     </section>
