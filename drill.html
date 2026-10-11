@@ -22,16 +22,44 @@
   <main class="drill-app">
     <section class="drill-toolbar">
       <label class="drill-field">
-        <span>范围</span>
-        <select id="drill-chapter">
-          <option value="all">全部章节</option>
+        <span>刷词来源</span>
+        <select id="drill-source">
+          <option value="chapter">按章节</option>
+          <option value="list">从不熟列表</option>
         </select>
       </label>
-      <label class="drill-check">
-        <input type="checkbox" id="drill-extra" />
-        <span>只要有扩展/对比的词</span>
+
+      <div id="source-chapter-fields">
+        <label class="drill-field">
+          <span>章节范围</span>
+          <select id="drill-chapter">
+            <option value="all">全部章节</option>
+          </select>
+        </label>
+        <label class="drill-check">
+          <input type="checkbox" id="drill-extra" />
+          <span>只要有扩展/对比的词</span>
+        </label>
+      </div>
+
+      <div id="source-list-fields" hidden>
+        <label class="drill-field">
+          <span>开刷哪一份不熟列表</span>
+          <select id="drill-list-source"></select>
+        </label>
+      </div>
+
+      <label class="drill-field">
+        <span>点「不熟」写入哪一份列表</span>
+        <select id="drill-list-target"></select>
       </label>
-      <button type="button" class="drill-btn ghost" id="btn-reshuffle">重洗牌</button>
+
+      <div class="drill-list-actions">
+        <button type="button" class="drill-btn ghost" id="btn-reshuffle">重洗牌</button>
+        <button type="button" class="drill-btn ghost" id="btn-new-list">新建列表</button>
+        <button type="button" class="drill-btn ghost" id="btn-rename-list">重命名</button>
+        <button type="button" class="drill-btn ghost" id="btn-delete-list">删除列表</button>
+      </div>
     </section>
 
     <div class="drill-status">
@@ -51,7 +79,7 @@
       <p class="drill-tap-hint">点卡片揭晓；揭晓时会朗读单词</p>
     </section>
 
-    <p class="drill-empty" id="drill-empty" hidden>这个范围内没有词，换个章节试试。</p>
+    <p class="drill-empty" id="drill-empty" hidden>这个范围内没有词，换个章节或列表试试。</p>
 
     <section class="drill-actions" id="drill-actions" hidden>
       <button type="button" class="drill-btn primary" id="btn-reveal">揭晓释义</button>
@@ -59,12 +87,39 @@
       <button type="button" class="drill-btn bad" id="btn-unknown" hidden>不熟</button>
     </section>
 
+    <section class="drill-lists" id="drill-lists">
+      <div class="drill-lists-head">
+        <h2>不熟词表</h2>
+        <label class="drill-field inline">
+          <span>查看</span>
+          <select id="drill-list-view"></select>
+        </label>
+      </div>
+      <p class="drill-lists-blurb" id="drill-list-count">共 0 词 · 保存在本机浏览器</p>
+      <div class="drill-table-wrap">
+        <table class="drill-table" id="drill-table">
+          <thead>
+            <tr>
+              <th>单词</th>
+              <th>释义</th>
+              <th>章</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="drill-table-body"></tbody>
+        </table>
+      </div>
+      <p class="drill-lists-empty" id="drill-table-empty" hidden>这份列表还是空的。刷词时点「不熟」就会加进来。</p>
+      <button type="button" class="drill-btn primary" id="btn-start-view-list">用正在查看的列表开刷</button>
+    </section>
+
     <section class="drill-help">
       <h2>怎么用</h2>
       <p>正面只出英文词，你先自己想意思，再揭晓。</p>
-      <p>揭晓时会用手机系统语音朗读该词；也可随时点 🔊 再听一遍。</p>
-      <p>揭晓只显示<strong>词头核心释义</strong>；词条里的易混、对比表、词源不塞进卡片，需要时点「查看完整笔记」。</p>
-      <p>加到手机主屏幕：浏览器菜单里选「添加到主屏幕 / 添加到桌面」即可当 App 用。</p>
+      <p>点「不熟」会写入上方选定的不熟列表；可自建多份列表（比如「第27章」「本周复习」）。</p>
+      <p>下次把「刷词来源」改成「从不熟列表」，或点词表下方的「用正在查看的列表开刷」。</p>
+      <p>在不熟列表里点「认识」，会从当前开刷的那份列表里移除。</p>
+      <p>揭晓时会朗读单词；也可点「读」再听。数据只存在你这台手机的浏览器里。</p>
     </section>
   </main>
 

@@ -11,6 +11,16 @@
   gap: .65rem;
   margin-bottom: .85rem;
 }
+#source-chapter-fields,
+#source-list-fields {
+  display: grid;
+  gap: .65rem;
+}
+.drill-list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .5rem;
+}
 .drill-field {
   display: grid;
   gap: .3rem;
