@@ -259,18 +259,17 @@
     const target = getList(state, $("#drill-list-target").value);
     meta.textContent = `认识 ${known} · 不熟 ${unknown} · 写入「${target.name}」`;
 
+    const kind = $("#drill-kind");
+    const isRelated = card.kind === "related";
+    kind.hidden = !isRelated;
+    kind.textContent = isRelated ? "拓展词" : "";
+
     $("#drill-word").textContent = card.word;
     $("#drill-ipa").textContent = revealed && card.ipa ? card.ipa : "";
     $("#drill-ipa").hidden = !(revealed && card.ipa);
     $("#drill-sense").textContent = revealed ? card.sense : "想一想这个词的意思";
     $("#drill-sense").classList.toggle("is-answer", revealed);
     $("#drill-sense").classList.toggle("is-prompt", !revealed);
-
-    const extra = $("#drill-extra-hint");
-    extra.hidden = !(revealed && card.extra);
-    const note = $("#drill-note-link");
-    note.href = card.url;
-    note.hidden = !revealed;
 
     $("#btn-reveal").hidden = revealed;
     $("#btn-know").hidden = !revealed;
@@ -282,6 +281,7 @@
       source: $("#drill-source").value,
       chapter: $("#drill-chapter").value,
       onlyExtra: $("#drill-extra").checked,
+      includeRelated: $("#drill-related").checked,
       activeListId: $("#drill-list-target").value,
       sourceListId: $("#drill-list-source").value,
       viewListId: $("#drill-list-view").value,
@@ -391,6 +391,7 @@
     }
     if (state.chapter) select.value = state.chapter;
     $("#drill-extra").checked = Boolean(state.onlyExtra);
+    $("#drill-related").checked = state.includeRelated !== false;
     $("#drill-source").value = state.source === "list" ? "list" : "chapter";
 
     fillListSelects(state);
@@ -399,6 +400,7 @@
     $("#drill-source").addEventListener("change", () => startDeck(true));
     select.addEventListener("change", () => startDeck(true));
     $("#drill-extra").addEventListener("change", () => startDeck(true));
+    $("#drill-related").addEventListener("change", () => startDeck(true));
     $("#drill-list-source").addEventListener("change", () => {
       persistPrefs();
       if ($("#drill-source").value === "list") startDeck(true);
