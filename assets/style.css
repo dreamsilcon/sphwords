@@ -266,6 +266,87 @@ a:hover { color: #115e59; }
 .compare-table td:nth-child(2),
 .compare-table th:nth-child(2) { width: 40%; }
 .note { margin-top: 1.2rem; color: var(--muted); font-size: .92rem; }
+.compare-promo {
+  width: min(100% - 2rem, 70rem);
+  margin: 0 auto 1.25rem;
+}
+.compare-promo-link {
+  display: block;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--card));
+  color: inherit;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+.compare-promo-link:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  color: inherit;
+}
+.compare-promo-link strong {
+  display: block;
+  color: var(--head);
+  font-size: 1.05rem;
+  margin-bottom: .2rem;
+}
+.compare-promo-link span {
+  color: var(--muted);
+  font-size: .92rem;
+}
+.compare-hero .note { margin-top: .75rem; }
+.compare-toc {
+  padding: 0 0 0.5rem;
+}
+.compare-toc h2,
+.compare-section h2 {
+  margin: 0 0 .5rem;
+  color: var(--head);
+  font-size: 1.25rem;
+}
+.compare-toc ul,
+.compare-toc-local {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+.compare-toc-local {
+  margin-bottom: 1.25rem;
+  color: var(--muted);
+  font-size: .95rem;
+}
+.compare-section {
+  margin-top: 1.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+.section-blurb {
+  margin: 0 0 .75rem;
+  color: var(--muted);
+  font-size: .95rem;
+}
+.compare-hub {
+  width: min(100% - 2rem, 56rem);
+}
+.compare-card .compare-ch {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .78rem;
+  font-weight: 650;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, #fff);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+  border-radius: 999px;
+  padding: .05rem .45rem;
+}
+.compare-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1rem;
+  justify-content: space-between;
+  margin: 0 0 .55rem;
+  color: var(--muted);
+  font-size: .9rem;
+}
 .site-footer {
   border-top: 1px solid var(--line);
   padding: 1.2rem 0 2rem;
