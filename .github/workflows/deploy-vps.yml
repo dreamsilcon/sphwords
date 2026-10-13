@@ -1,0 +1,76 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild generated pages
+        run: |
+          python3 scripts/build_compare_hub.py
+          python3 scripts/build_drill_index.py
+          python3 scripts/build_search_index.py
+
+      - name: Setup SSH
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          set -euo pipefail
+          test -n "${VPS_SSH_KEY:-}" || { echo "Missing secret VPS_SSH_KEY"; exit 1; }
+          test -n "${VPS_HOST:-}" || { echo "Missing secret VPS_HOST"; exit 1; }
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Rsync to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+        run: |
+          set -euo pipefail
+          USER="${VPS_USER:-root}"
+          DEST="${VPS_PATH:-/opt/sphwords}"
+          rsync -az --delete \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.venv/' \
+            --exclude 'venv/' \
+            --exclude 'data/' \
+            --exclude 'logs/' \
+            --exclude '__pycache__/' \
+            --exclude '*.docx' \
+            --exclude '.DS_Store' \
+            --exclude '_preview/' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes" \
+            ./ "${USER}@${VPS_HOST}:${DEST}/"
+
+      - name: Restart sphwords service
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          set -euo pipefail
+          USER="${VPS_USER:-root}"
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes \
+            "${USER}@${VPS_HOST}" \
+            'systemctl restart sphwords && systemctl is-active sphwords && curl -sf -o /dev/null -w "hub:%{http_code}\n" http://127.0.0.1:8787/'
