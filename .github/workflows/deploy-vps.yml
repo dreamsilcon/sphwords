@@ -68,21 +68,12 @@ jobs:
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
           set -euo pipefail
           USER="${VPS_USER:-root}"
+          DEST="${VPS_PATH:-/opt/sphwords}"
+          # Script was just rsynced; run it on the VPS (avoids SSH quoting issues)
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes \
             "${USER}@${VPS_HOST}" \
-            'set -euo pipefail
-             systemctl restart sphwords
-             systemctl is-active sphwords
-             # uvicorn needs a moment after restart before :8787 accepts connections
-             ok=0
-             for i in 1 2 3 4 5 6 7 8 9 10; do
-               code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8787/ || true)
-               echo "health try $i: $code"
-               if [ "$code" = "200" ]; then ok=1; break; fi
-               sleep 1
-             done
-             [ "$ok" = "1" ] || { systemctl status sphwords --no-pager || true; journalctl -u sphwords -n 40 --no-pager || true; exit 1; }
-             echo "hub:200"'
+            "bash ${DEST}/scripts/vps-post-deploy.sh"
