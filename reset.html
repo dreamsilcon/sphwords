@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>重置密码 · SPHWords</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/auth.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">SPH<span>Words</span></a>
+      <div class="nav-meta"><a href="login.html">登录</a></div>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <h1>设置新密码</h1>
+    <p class="sub">请输入新密码（至少 8 位）。</p>
+    <div class="auth-panel">
+      <form id="form">
+        <label for="password">新密码</label>
+        <input id="password" type="password" required minlength="8" autocomplete="new-password" />
+        <label for="password2">确认新密码</label>
+        <input id="password2" type="password" required minlength="8" autocomplete="new-password" />
+        <button class="auth-submit" type="submit" id="submitBtn">更新密码</button>
+      </form>
+      <div class="auth-status" id="status"></div>
+    </div>
+    <p class="auth-links"><a href="login.html">返回登录</a></p>
+  </main>
+
+  <script src="assets/site-base.js"></script>
+  <script src="assets/auth-forms.js"></script>
+  <script>
+    const token = new URLSearchParams(location.search).get("token") || "";
+    const statusEl = document.getElementById("status");
+    if (!token) {
+      SphAuthForms.setStatus(statusEl, "缺少重置 token，请从邮件链接重新进入", "err");
+      document.getElementById("submitBtn").disabled = true;
+    }
+
+    document.getElementById("form").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const p1 = document.getElementById("password").value;
+      const p2 = document.getElementById("password2").value;
+      if (p1 !== p2) {
+        SphAuthForms.setStatus(statusEl, "两次输入的密码不一致", "err");
+        return;
+      }
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      SphAuthForms.setStatus(statusEl, "提交中…");
+      try {
+        const res = await fetch(sphUrl("/api/auth/reset-password"), {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, password: p1 }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.detail || "重置失败");
+        SphAuthForms.setStatus(statusEl, (data.message || "已更新") + "，正在前往登录…", "ok");
+        setTimeout(() => { location.href = "login.html"; }, 800);
+      } catch (err) {
+        SphAuthForms.setStatus(statusEl, err.message || String(err), "err");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

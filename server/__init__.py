@@ -1,0 +1,1 @@
+"""SPHWords backend package."""

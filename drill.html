@@ -10,14 +10,17 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="assets/style.css" />
   <link rel="stylesheet" href="assets/drill.css" />
+  <link rel="stylesheet" href="assets/auth.css" />
 </head>
 <body class="drill-body">
   <header class="site-header">
     <div class="inner">
       <a class="brand" href="index.html">SPH<span>Words</span></a>
-      <div class="nav-meta"><a href="index.html">目录</a> · <a href="compare.html">辨析</a> · 自测</div>
+      <nav class="site-nav" data-site-nav data-active="drill" aria-label="主导航"></nav>
     </div>
   </header>
+
+  <div class="auth-bar" id="drill-auth-bar"></div>
 
   <main class="drill-app">
     <section class="drill-toolbar">
@@ -98,7 +101,7 @@
           <select id="drill-list-view"></select>
         </label>
       </div>
-      <p class="drill-lists-blurb" id="drill-list-count">共 0 词 · 保存在本机浏览器</p>
+      <p class="drill-lists-blurb" id="drill-list-count">共 0 词</p>
       <div class="drill-table-wrap">
         <table class="drill-table" id="drill-table">
           <thead>
@@ -120,11 +123,13 @@
       <h2>怎么用</h2>
       <p>正面只出英文词，你先自己想意思，再揭晓看核心释义——核心词和词条里的拓展/易混/对比词都会出。</p>
       <p>点「不熟」写入选定列表；可自建多份列表。下次可直接从不熟列表开刷。</p>
-      <p>在不熟列表模式点「认识」，会从该列表移除。数据保存在本机浏览器。</p>
+      <p>在不熟列表模式点「认识」，会从该列表移除。登录后数据保存在账号（SQLite）；未登录时仅本机浏览器。</p>
     </section>
   </main>
 
   <footer class="site-footer"><div class="wrap">SPHWords 自测 · 数据来自课堂笔记词头</div></footer>
+  <script src="assets/site-base.js"></script>
+  <script src="assets/site-nav.js"></script>
   <script src="assets/drill.js" defer></script>
 </body>
 </html>

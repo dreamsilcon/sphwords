@@ -123,7 +123,7 @@
       <div class="search-results" hidden role="listbox" aria-label="搜索结果"></div>
     `;
 
-    const nav = headerInner.querySelector(".nav-meta");
+    const nav = headerInner.querySelector(".site-nav, .nav-meta");
     if (nav) headerInner.insertBefore(wrap, nav);
     else headerInner.appendChild(wrap);
 

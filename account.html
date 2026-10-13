@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>我的账号 · SPHWords</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/auth.css" />
+  <link rel="stylesheet" href="assets/drill.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">SPH<span>Words</span></a>
+      <nav class="site-nav" data-site-nav data-active="account" aria-label="主导航"></nav>
+    </div>
+  </header>
+
+  <main class="account-wrap">
+    <h1>我的账号</h1>
+    <p class="sub" id="account-email">加载中…</p>
+
+    <section class="account-card">
+      <h2>修改密码</h2>
+      <form id="pw-form" class="auth-panel account-panel">
+        <label for="current">当前密码</label>
+        <input id="current" type="password" required minlength="8" autocomplete="current-password" />
+        <label for="newpw">新密码（至少 8 位）</label>
+        <input id="newpw" type="password" required minlength="8" autocomplete="new-password" />
+        <label for="newpw2">确认新密码</label>
+        <input id="newpw2" type="password" required minlength="8" autocomplete="new-password" />
+        <button class="auth-submit" type="submit" id="pw-btn">更新密码</button>
+        <div class="auth-status" id="pw-status"></div>
+      </form>
+    </section>
+
+    <section class="account-card">
+      <div class="account-lists-head">
+        <h2>错题本</h2>
+        <label class="drill-field inline account-list-pick">
+          <span>列表</span>
+          <select id="list-select"></select>
+        </label>
+      </div>
+      <p class="account-blurb" id="list-meta">登录后可查看账号下的不熟词表。</p>
+      <div class="drill-table-wrap">
+        <table class="drill-table" id="list-table">
+          <thead>
+            <tr>
+              <th>单词</th>
+              <th>释义</th>
+              <th>章</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="list-body"></tbody>
+        </table>
+      </div>
+      <p class="drill-lists-empty" id="list-empty" hidden>这份列表还是空的。</p>
+      <div class="account-actions">
+        <a class="drill-btn primary" id="btn-drill-list" href="drill.html">去自测刷这份列表</a>
+        <button type="button" class="drill-btn ghost" id="btn-logout">退出登录</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap">SPHWords · 账号与错题本</div></footer>
+  <script src="assets/site-base.js"></script>
+  <script src="assets/site-nav.js"></script>
+  <script src="assets/auth-forms.js"></script>
+  <script src="assets/account.js"></script>
+</body>
+</html>

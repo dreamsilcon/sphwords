@@ -18,6 +18,10 @@
   let unknown = 0;
   /** @type {SpeechSynthesisVoice[]} */
   let voices = [];
+  /** @type {{ email: string, id: number } | null} */
+  let authUser = null;
+  let syncTimer = 0;
+  let syncNote = "本机浏览器";
 
   const $ = (sel) => document.querySelector(sel);
 
@@ -29,35 +33,118 @@
     return [{ id: DEFAULT_LIST_ID, name: "默认不熟", ids: [] }];
   }
 
+  function normalizeState(raw) {
+    const state = raw && typeof raw === "object" ? { ...raw } : {};
+    if (!Array.isArray(state.lists) || !state.lists.length) state.lists = defaultLists();
+    if (!state.activeListId) state.activeListId = state.lists[0].id;
+    if (!state.viewListId) state.viewListId = state.activeListId;
+    if (!state.sourceListId) state.sourceListId = state.activeListId;
+    if (state.source !== "list") state.source = "chapter";
+    state.lists = state.lists.map((l) => ({
+      id: l.id || uid(),
+      name: String(l.name || "未命名列表").slice(0, 40),
+      ids: Array.isArray(l.ids) ? [...new Set(l.ids.map(String))] : [],
+    }));
+    return state;
+  }
+
   function loadState() {
     try {
-      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      if (!Array.isArray(raw.lists) || !raw.lists.length) raw.lists = defaultLists();
-      if (!raw.activeListId) raw.activeListId = raw.lists[0].id;
-      if (!raw.viewListId) raw.viewListId = raw.activeListId;
-      if (!raw.sourceListId) raw.sourceListId = raw.activeListId;
-      if (raw.source !== "list") raw.source = "chapter";
-      raw.lists = raw.lists.map((l) => ({
-        id: l.id || uid(),
-        name: String(l.name || "未命名列表").slice(0, 40),
-        ids: Array.isArray(l.ids) ? [...new Set(l.ids.map(String))] : [],
-      }));
-      return raw;
+      return normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"));
     } catch {
-      return {
-        source: "chapter",
-        lists: defaultLists(),
-        activeListId: DEFAULT_LIST_ID,
-        viewListId: DEFAULT_LIST_ID,
-        sourceListId: DEFAULT_LIST_ID,
-      };
+      return normalizeState({});
     }
   }
 
+  function listWordCount(state) {
+    return state.lists.reduce((n, l) => n + (l.ids?.length || 0), 0);
+  }
+
+  function scheduleServerSync(state) {
+    if (!authUser) return;
+    window.clearTimeout(syncTimer);
+    syncTimer = window.setTimeout(async () => {
+      try {
+        const res = await fetch(apiUrl("/api/drill/lists"), {
+          method: "PUT",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(state),
+        });
+        if (!res.ok) throw new Error("sync failed");
+        syncNote = `账号 ${authUser.email}`;
+        renderAuthBar();
+        renderListTable();
+      } catch {
+        syncNote = `账号 ${authUser.email}（同步失败，仍保存在本机）`;
+        renderAuthBar();
+        renderListTable();
+      }
+    }, 400);
+  }
+
   function saveState(patch) {
-    const next = { ...loadState(), ...patch };
+    const next = normalizeState({ ...loadState(), ...patch });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    scheduleServerSync(next);
     return next;
+  }
+
+  function renderAuthBar() {
+    const bar = $("#drill-auth-bar");
+    if (!bar) return;
+    if (authUser) {
+      bar.innerHTML = `<span>已登录 <strong>${escapeHtml(authUser.email)}</strong> · 错词本跟账号走</span>
+        <span><a href="account.html">我的账号</a> · <button type="button" class="drill-linkish" id="btn-logout">退出</button></span>`;
+      $("#btn-logout")?.addEventListener("click", async () => {
+        await fetch(apiUrl("/api/auth/logout"), { method: "POST", credentials: "same-origin" });
+        authUser = null;
+        syncNote = "本机浏览器";
+        renderAuthBar();
+        renderListTable();
+      });
+    } else {
+      bar.innerHTML = `<span class="muted">未登录：错词本只在本机。登录后可跨手机/电脑同步。</span>
+        <span><a href="login.html?next=drill.html">登录</a> · <a href="register.html">注册</a></span>`;
+    }
+  }
+
+  function apiUrl(path) {
+    return (window.sphUrl || ((p) => p))(path);
+  }
+
+  async function hydrateAuthAndLists() {
+    try {
+      const meRes = await fetch(apiUrl("/api/auth/me"), { credentials: "same-origin" });
+      const me = await meRes.json();
+      if (me.authenticated) {
+        authUser = { email: me.email, id: me.id };
+        const local = loadState();
+        const remoteRes = await fetch(apiUrl("/api/drill/lists"), { credentials: "same-origin" });
+        if (remoteRes.ok) {
+          const remote = normalizeState(await remoteRes.json());
+          const remoteEmpty = listWordCount(remote) === 0;
+          const localHas = listWordCount(local) > 0;
+          if (remoteEmpty && localHas) {
+            const merged = saveState(local);
+            syncNote = `账号 ${authUser.email}`;
+            return merged;
+          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+          syncNote = `账号 ${authUser.email}`;
+          return remote;
+        }
+        syncNote = `账号 ${authUser.email}`;
+      } else {
+        authUser = null;
+        syncNote = "本机浏览器";
+      }
+    } catch {
+      // static file open / API down — keep local only
+      authUser = null;
+      syncNote = "本机浏览器";
+    }
+    return loadState();
   }
 
   function getList(state, id) {
@@ -208,7 +295,7 @@
     const empty = $("#drill-table-empty");
     body.innerHTML = "";
     const cards = list.ids.map((id) => cardById.get(id)).filter(Boolean);
-    $("#drill-list-count").textContent = `「${list.name}」共 ${cards.length} 词 · 保存在本机浏览器`;
+    $("#drill-list-count").textContent = `「${list.name}」共 ${cards.length} 词 · ${syncNote}`;
     empty.hidden = cards.length > 0;
     for (const card of cards) {
       const tr = document.createElement("tr");
@@ -376,7 +463,8 @@
   }
 
   async function init() {
-    const state = loadState();
+    const state = await hydrateAuthAndLists();
+    renderAuthBar();
     const res = await fetch(INDEX_URL);
     if (!res.ok) throw new Error("drill index fetch failed");
     allCards = await res.json();
@@ -491,6 +579,19 @@
     }
 
     renderListTable();
+
+    const hash = location.hash.replace(/^#/, "");
+    const hashParams = new URLSearchParams(hash.includes("=") ? hash : "");
+    const listFromHash = hashParams.get("list");
+    if (listFromHash && state.lists.some((l) => l.id === listFromHash)) {
+      $("#drill-source").value = "list";
+      $("#drill-list-source").value = listFromHash;
+      $("#drill-list-view").value = listFromHash;
+      $("#drill-list-target").value = listFromHash;
+      syncSourceFields();
+      persistPrefs();
+    }
+
     startDeck(true);
 
     if ("serviceWorker" in navigator) {

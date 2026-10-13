@@ -3,3 +3,9 @@
 .DS_Store
 __pycache__/
 _preview/
+.venv/
+venv/
+data/*.db
+data/*.db-*
+logs/
+*.pyc

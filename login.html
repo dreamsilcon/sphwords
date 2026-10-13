@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>登录 · SPHWords</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/auth.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">SPH<span>Words</span></a>
+      <div class="nav-meta"><a href="register.html">注册</a></div>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <h1>登录</h1>
+    <p class="sub" id="sub">登录后，不熟词表会保存在账号下，换手机/电脑也能同步。</p>
+    <div class="auth-panel">
+      <form id="form">
+        <label for="email">邮箱</label>
+        <input id="email" type="email" placeholder="you@example.com" required autocomplete="email" />
+
+        <label for="password">密码</label>
+        <input id="password" type="password" required minlength="8" autocomplete="current-password" />
+
+        <button class="auth-submit" type="submit" id="submitBtn">登录</button>
+      </form>
+      <div class="auth-status" id="status"></div>
+    </div>
+    <p class="auth-links">
+      <a href="register.html">注册</a>
+      <a href="forgot.html">忘记密码</a>
+      <a href="drill.html">去自测</a>
+    </p>
+  </main>
+
+  <script src="assets/site-base.js"></script>
+  <script src="assets/auth-forms.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (params.get("verified") === "1") {
+      document.getElementById("sub").textContent = "邮箱已验证，请登录。";
+    }
+    document.getElementById("form").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      const statusEl = document.getElementById("status");
+      btn.disabled = true;
+      SphAuthForms.setStatus(statusEl, "登录中…");
+      try {
+        const res = await fetch(sphUrl("/api/auth/login"), {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.detail || "登录失败");
+        SphAuthForms.setStatus(statusEl, "登录成功，正在跳转…", "ok");
+        location.href = params.get("next") || "index.html";
+      } catch (err) {
+        SphAuthForms.setStatus(statusEl, err.message || String(err), "err");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -213,7 +213,7 @@ def render(entries: list[dict]) -> str:
   <header class="site-header">
     <div class="inner">
       <a class="brand" href="index.html">SPH<span>Words</span></a>
-      <div class="nav-meta"><a href="index.html">目录</a> · <a href="compare.html">辨析汇总</a></div>
+      <nav class="site-nav" data-site-nav data-active="compare" aria-label="主导航"></nav>
     </div>
   </header>
   <section class="hero wrap compare-hero">
@@ -232,6 +232,9 @@ def render(entries: list[dict]) -> str:
   </main>
   <footer class="site-footer"><div class="wrap">宋鹏昊单词课原始笔记 · 辨析汇总</div></footer>
   <script src="assets/search.js" defer></script>
+  <script src="assets/site-base.js"></script>
+  <script src="assets/site-nav.js"></script>
+  <script src="assets/compare-pager.js" defer></script>
 </body>
 </html>
 """
